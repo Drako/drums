@@ -4,3 +4,9 @@
 .idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
+
+# node
+node_modules/
+
+# cordova
+platforms/
