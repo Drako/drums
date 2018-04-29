@@ -1,3 +1,21 @@
+(function() {
+    const throttle = function(type, name, obj) {
+        obj = obj || window;
+        let running = false;
+        const func = function() {
+            if (running) { return; }
+            running = true;
+            requestAnimationFrame(function() {
+                obj.dispatchEvent(new CustomEvent(name));
+                running = false;
+            });
+        };
+        obj.addEventListener(type, func);
+    };
+
+    throttle('resize', 'optimizedResize');
+})();
+
 class App {
     constructor() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
@@ -16,14 +34,30 @@ class App {
 
         this.pixiApp = app;
 
-        PIXI.loader.add('img/drums.jpg').load(this.onImagesReady.bind(this));
+        this.sprites = {};
+
+        PIXI.loader
+            .add('img/drums.jpg')
+            .load(this.onAssetsReady.bind(this));
     }
 
-    onImagesReady() {
-        console.log("Images ready.");
-
+    onAssetsReady() {
         const drums = new PIXI.Sprite(PIXI.loader.resources['img/drums.jpg'].texture);
         this.pixiApp.stage.addChild(drums);
+        this.sprites.drums = drums;
+        this.resizeDrums();
+
+        window.addEventListener('optimizedResize', this.onResize.bind(this), false);
+    }
+
+    onResize() {
+        this.pixiApp.renderer.resize(window.innerWidth, window.innerHeight);
+        this.resizeDrums();
+    }
+
+    resizeDrums() {
+        this.sprites.drums.width = window.innerWidth;
+        this.sprites.drums.height = window.innerHeight;
     }
 }
 
