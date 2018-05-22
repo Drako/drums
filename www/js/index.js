@@ -61,4 +61,25 @@ class App {
     }
 }
 
-const app = new App();
+// const app = new App();
+
+(function init() {
+  let app = new PIXI.Application({
+    width: 1280,
+    height: 720,
+    antialias: true,
+    backgroundColor: 0xff393a,
+  });
+
+  // app.renderer.view.style.position = "absolute";
+  // app.renderer.view.style.display = "block";
+  // app.renderer.autoResize = true;
+  // app.renderer.resize(window.innerWidth, window.innerHeight);
+
+  document.body.appendChild(app.view);
+
+
+  const box = new DrumBox(100, 100);
+  box.draw(app.stage);
+
+})()
